@@ -1,10 +1,13 @@
 package com.boots.entity;
 
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Set;
 
@@ -18,6 +21,32 @@ import java.util.Set;
         private String username;
         @Size(min=2, message = "Не меньше 5 знаков")
         private String password;
+
+
+        private String email;
+        public String getEmail() {
+        return email;
+    }
+        public void setEmail(String email) {
+        this.email = email;
+    }
+
+        @Lob
+        @Column(name = "profileImage", columnDefinition = "bytea")
+        @Type(type="org.hibernate.type.BinaryType")
+        private byte[] profileImage;
+        public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
+        public String getProfileImage() {
+            if (profileImage != null) {
+                return Base64.getEncoder().encodeToString(profileImage);
+            } else {
+                return null;
+        }}
+
+
+
         @Transient
         private String passwordConfirm;
         @ManyToMany(fetch = FetchType.EAGER)
